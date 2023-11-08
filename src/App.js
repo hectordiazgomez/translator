@@ -7,9 +7,20 @@ import { getFirestore, collection, getDocs, addDoc, serverTimestamp } from 'fire
 import { getStorage, ref, uploadBytes, getDownloadURL, listAll } from 'firebase/storage';
 import { BookmarkAltIcon, BookmarkIcon, ChatAlt2Icon, CodeIcon, CogIcon, LightningBoltIcon, LinkIcon, MenuIcon, PlusCircleIcon, SparklesIcon, UserCircleIcon, UserIcon } from "@heroicons/react/solid"
 
+function LoadingIcon() {
+  return (
+    <div className="flex items-center justify-center space-x-2 animate-pulse">
+      <div className="w-2 h-2 sm:w-3 sm:h-3 bg-blue-400 rounded-full"></div>
+      <div className="w-2 h-2 sm:w-3 sm:h-3  bg-blue-400 rounded-full"></div>
+      <div className="w-2 h-2 sm:w-3 sm:h-3  bg-blue-400 rounded-full"></div>
+    </div>
+  );
+}
+
 function App() {
 
   const [popUp, setPopUp] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const toggle = () => {
     setPopUp(!popUp)
@@ -23,6 +34,7 @@ function App() {
   const [answer, setAnswer] = useState('');
 
   const handleSubmit = () => {
+    setLoading(true);
     fetch('http://localhost:5000/ask', {
       method: 'POST',
       headers: {
@@ -33,6 +45,7 @@ function App() {
       .then((response) => response.json())
       .then((data) => {
         setAnswer(data.answer);
+        setLoading(false)
       })
       .catch((error) => {
         console.error('Error:', error);
@@ -73,8 +86,8 @@ function App() {
           <p className='text-blue-600 hidden sm:flex font-semibold pt-5 mb-8'>Tus elementos guardados</p>
           <ul>
             <li className='hidden sm:flex items-center'><ChatAlt2Icon className='w-4 h-auto text-blue-400' /> <p className='text-gray-500 my-2 line-clamp-1 ml-1'>Traducción de agua</p> </li>
-            <li className='hidden sm:flex items-center'><ChatAlt2Icon className='w-4 h-auto text-blue-400' /> <p className='text-gray-500 my-2 line-clamp-1 ml-1'>Traduce historia de la ciencia en Europa y Asia en el siglo XX</p> </li>
-            <li className='hidden sm:flex items-center'><ChatAlt2Icon className='w-4 h-auto text-blue-400' /> <p className='text-gray-500 my-2 line-clamp-1 ml-1'>Traduce el agua es importante para los animales</p> </li>
+            <li className='hidden sm:flex items-center'><ChatAlt2Icon className='w-4 h-auto text-blue-400' /> <p className='text-gray-500 my-2 line-clamp-1 ml-1'>Traduce historia de la ciencia</p> </li>
+            <li className='hidden sm:flex items-center'><ChatAlt2Icon className='w-4 h-auto text-blue-400' /> <p className='text-gray-500 my-2 line-clamp-1 ml-1'>Traduce el agua es importante</p> </li>
           </ul>
           <div className='hidden sm:flex pt-10 justify-center'>
             <PlusCircleIcon className='text-gray-600 hover:text-gray-800 h-6 cursor-pointer w-6' />
@@ -94,24 +107,37 @@ function App() {
             <input
               type="text"
               placeholder='Escribe acá'
-              className=" w-11/12 outline-none p-2"
+              className="w-11/12 outline-none p-2"
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  handleSubmit();
+                }
+              }}
             />
             <div className='w-1/12 flex justify-center'>
               <LightningBoltIcon
-                className="text-blue-500 cursor-pointer w-6 h-auto"
+                className="text-blue-500 hover:text-blue-700 cursor-pointer w-6 h-auto"
                 onClick={handleSubmit}
               />
             </div>
           </form>
-          {answer ? (
-            <div className="my-6 flex border border-gray-300 px-2 py-4 rounded w-3/5">
-              <div className='w-1/12 flex justify-center'><SparklesIcon className='text-purple-600 w-6 h-auto cursor-pointer' /></div>
-              <div className='w-5/6'>{answer}</div>
-              <div className='w-1/12 flex justify-center'><BookmarkIcon className='text-blue-600 w-6 h-auto cursor-pointer' /></div>
-            </div>
-          ) : null}
+          {loading? <div className='w-1/2 flex justify-center pt-6'> 
+            <LoadingIcon />
+            </div> 
+          :
+          <>
+              {answer ? (
+                <div className="my-6 flex border border-gray-300 px-2 py-4 rounded w-3/5">
+                  <div className='w-1/12 flex justify-center'><SparklesIcon className='text-purple-600 w-6 h-auto cursor-pointer' /></div>
+                  <div className='w-5/6'>{answer}</div>
+                  <div className='w-1/12 flex justify-center'><BookmarkIcon className='text-blue-600 w-6 h-auto cursor-pointer' /></div>
+                </div>
+              ) : null}
+          </>
+          }
         </div>
       </div>
     </div>
