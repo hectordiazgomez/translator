@@ -76,7 +76,7 @@ function App() {
         {popUp && <Colab createPublication={createPublication} setNewDescription={setNewDescription} setMainText={setMainText} newMainText={newMainText} newDescription={newDescription} toggle={toggle} />}
         <div className='w-1/4 hidden sm:flex justify-evenly'>
           <PlusCircleIcon onClick={toggle} className='text-gray-600 hover:text-gray-800 cursor-pointer w-6 h-auto' />
-          <CodeIcon className='text-gray-600 w-6 hover:text-gray-800 cursor-pointer h-auto' />
+          <a className=' flex justify-center' href='https://github.com/hectordiazgomez/translator' target='blank'><CodeIcon className='text-gray-600 w-6 hover:text-gray-800 cursor-pointer h-auto' /></a>
           <CogIcon className='text-gray-600 hover:text-gray-800 w-6 cursor-pointer h-auto' />
           <UserCircleIcon className='text-gray-600 hover:text-gray-800 cursor-pointer w-6 h-auto' />
         </div>
@@ -131,9 +131,9 @@ function App() {
           <>
               {answer ? (
                 <div className="my-6 flex border border-gray-300 px-2 py-4 rounded w-3/5">
-                  <div className='w-1/12 flex justify-center'><SparklesIcon className='text-purple-600 w-6 h-auto cursor-pointer' /></div>
+                  <div className='w-1/12 items-start flex justify-center'><SparklesIcon className='text-purple-600 w-6 h-auto cursor-pointer' /></div>
                   <div className='w-5/6'>{answer}</div>
-                  <div className='w-1/12 flex justify-center'><BookmarkIcon className='text-blue-600 w-6 h-auto cursor-pointer' /></div>
+                  <div className='w-1/12 items-start flex justify-center'><BookmarkIcon className='text-blue-600 w-6 h-auto cursor-pointer' /></div>
                 </div>
               ) : null}
           </>
